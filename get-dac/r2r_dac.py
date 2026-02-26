@@ -13,13 +13,11 @@ class R2R_DAC:
         GPIO.cleanup()
     
     def set_number(self, number):
-        if number < 0 or number > 255:
-            raise ValueError("Число должно быть в диапазоне от 0 до 255")
         for i, pin in enumerate(self.gpio_bits):
             bit_value = (number >> i) & 1
             GPIO.output(pin, bit_value)
         if self.verbose:
-            print(f"Установлено число: {number} (0b{number:08b})")
+            print(f"Установлено число: {number} {number:02b}")
             
     def set_voltage(self, voltage):
         if voltage < 0 or voltage > self.dynamic_range:
@@ -27,27 +25,17 @@ class R2R_DAC:
         max_number = 255
         number = int(round((voltage / self.dynamic_range) * max_number))
         self.set_number(number)
-        if self.verbose:
-            actual_voltage = (number / max_number) * self.dynamic_range
-            print(f"Запрошено напряжение: {voltage:.3f} В")
-            print(f"Установлено число: {number}, фактическое напряжение: {actual_voltage:.3f} В")
 
 if __name__ == "__main__":
     try:
-        dac = R2R_DAC([16, 20, 21, 25, 26, 17, 27, 22], 3.183, True)
+        dac = R2R_DAC([16, 20, 21, 25, 26, 17, 27, 22], 3.3, True)
         while True:
             try:
                 voltage = float(input("Введите напряжение в Вольтах: "))
                 dac.set_voltage(voltage)
-                print("-" * 40)
 
             except ValueError:
                 print("Ошибка: Вы ввели не число. Попробуйте ещё раз\n")
-            except KeyboardInterrupt:
-                print("\nПрограмма остановлена пользователем")
-                break
-            except Exception as e:
-                print(f"Ошибка: {e}\n")
     finally:
         if 'dac' in locals():
             dac.deinit()
