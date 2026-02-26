@@ -11,9 +11,7 @@ class MCP4725:
         
     def deinit(self):
         self.bus.close()
-        if self.verbose:
-            print("I2C шина закрыта")
-    
+
     def set_number(self, number):
         first_byte = self.wm | self.pds | (number >> 8)
         second_byte = number & 0xFF
@@ -24,13 +22,6 @@ class MCP4725:
 
             
     def set_voltage(self, voltage):
-        if not isinstance(voltage, (int, float)):
-            raise TypeError(f"Напряжение должно быть числом, получен {type(voltage)}")
-        if voltage < 0:
-            raise ValueError(f"Напряжение не может быть отрицательным: {voltage}")
-        if voltage > self.dynamic_range:
-            raise ValueError(f"Напряжение {voltage} В превышает максимальное {self.dynamic_range} В")
-        
         max_number = 4095  # 2^12 - 1
         number = int(round((voltage / self.dynamic_range) * max_number))
         self.set_number(number)
@@ -40,12 +31,6 @@ class MCP4725:
             error = actual_voltage - voltage
             error_percent = (abs(error) / self.dynamic_range) * 100
             
-            print(f"Запрошено напряжение: {voltage:.3f} В")
-            print(f"Установлено число: {number}")
-            print(f"Фактическое напряжение: {actual_voltage:.3f} В")
-            print(f"Абсолютная ошибка: {error:.3f} В")
-            print(f"Относительная ошибка: {error_percent:.2f}%")
-            print(f"Разрешение ЦАП: {self.dynamic_range / 4096:.3f} В/шаг")
 
 if __name__ == "__main__":
     try:
