@@ -1,8 +1,6 @@
 import r2r_dac as r2r
 import signal_tr as tr
 import time
-
-
 amplitude = 3
 signal_frequency = 20
 sampling_frequency = 1000
