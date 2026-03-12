@@ -8,7 +8,7 @@ if __name__ == "__main__":
     try:  
         start_time = time.time()
         while (time.time() - start_time) < duration:
-            current_voltage = r2r_adc.R2R_ADC(3.3).get_sc_voltage()
+            current_voltage = r2r_adc.R2R_ADC(3.3).get_sar_voltage()
             current_time = time.time() - start_time
             voltage_values.append(current_voltage)
             time_values.append(current_time)
