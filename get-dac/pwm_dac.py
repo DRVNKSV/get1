@@ -14,8 +14,6 @@ class PWM_DAC:
         gp.cleanup()
     def set_duty(self, duty):
         self.pwm.ChangeDutyCycle(duty)
-        fill_factor = 1 / duty * 100
-        print(f"Коэффициент заполнения: {fill_factor:.2f}")
     def voltage_to_duty(self, voltage):
         if not (0.0 <= voltage <= self.dynamic_range):
             print(f'Напряжение выходит за динамический диапазон ЦАП (0.00 - {self.dynamic_range:.2f} В)')
@@ -26,16 +24,16 @@ class PWM_DAC:
         duty = self.voltage_to_duty(voltage)
         if duty:
             self.set_duty(duty)
-
+            
 if __name__ == "__main__":
     try:
         dac = PWM_DAC(12, 500, 3.3, True)
 
         while True:
             try:
-                voltage = float(input("Введите напряжение в Вольтах: "))
+                voltage = float(input("paste voltage in volts: "))
                 dac.set_voltage(voltage)
             except ValueError:
-                print('Вы ввели не число. Попробуйте еще раз\n')
+                print('you paste not a number\n')
     finally:
         dac.deinit()

@@ -18,17 +18,12 @@ class MCP4725:
             return
         first_byte = self.wm | self.pds | (number >> 8)
         second_byte = number & 0xFF
-        try:
-            self.bus.write_i2c_block_data(self.address, 0x40, [first_byte, second_byte])
-        except Exception as e:
-            print(f"Ошибка I2C: {e}")
-            return
+
         if self.verbose:
             print(f"Число: {number}, отправленные по I2C данные: [0x{(self.address << 1):02X}, 0x{first_byte:02x}, 0x{second_byte:02x}]\n")
     def voltage_to_number(self, voltage):
         if not (0.0 <= voltage <= self.dynamic_range):
             print(f'Напряжение выходит за динамический диапазон ЦАП (0.00 - {self.dynamic_range:.2f} В)')
-            print('Устанавливаем 0.0 В')
             return 0
         return int(voltage / self.dynamic_range * 4095)
     def set_voltage(self, voltage):

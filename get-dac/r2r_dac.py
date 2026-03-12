@@ -12,11 +12,11 @@ class R2R_DAC:
     def set_number(self, number):
         bin_n = [int(element) for element in bin(number)[2:].zfill(8)]
         gp.output(self.gpio_bits, bin_n)
-        print(f"Число на вход ЦАП: {number}, {bin_n}")
+        print(f"Number in input: {number}, {bin_n}")
     def voltage_to_number(self, voltage):
         if not (0.0 <= voltage <= self.dynamic_range):
-            print(f'Напряжение выходит за динамический диапазон ЦАП (0.00 - {self.dynamic_range:.2f} В)')
-            print('Устанавливаем 0.0 В')
+            print(f'The voltage is out of range(0.00 - {self.dynamic_range:.2f} В)')
+            print('install 0.0 В')
             return 0
         return int(voltage / self.dynamic_range * 255 + 1)
     def set_voltage(self, voltage):
@@ -30,10 +30,10 @@ if __name__ == "__main__":
 
         while True:
             try:
-                voltage = float(input("Введите напряжение в Вольтах: "))
+                voltage = float(input("Paste voltage in volts: "))
                 dac.set_voltage(voltage)
             except ValueError:
-                print('Вы ввели не число. Попробуйте еще раз\n')
+                print('You paste noy a number. paste number\n')
     finally:
         dac.deinit()
     
